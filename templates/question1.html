@@ -35,10 +35,15 @@
 <body>
 	{% block bodyContent %}
 	<section class="graphique">
+		<div class="container">
+			<div class="row g-4">
 		<h2 class="title-question">Le nombre de toilettes par arrondissement</h2>
-		<div class="container-graphique-q1">
-			<img src="../static/img/q1.png" alt="Image du Graphique  Question n°1" class="img-q1"/>
-			<div class="content-question-q1">
+		<div class="row align-items-center container-graphique-q1">
+			<div class="col-6">
+				<img src="../static/img/q1.png" alt="Image du Graphique  Question n°1" class="img-q1 "/>
+			</div>
+			
+			<div class="col-6 content-question-q1">
 				<h3 class="title-question-description">Description</h3>
 				<p class="text-question">
 					Ce graphique nous présente le nombre de toilettes par arrondissement dans la ville de Paris.<br>
@@ -46,6 +51,9 @@
 				</p>
 			</div>
 		</div>
+	</div>
+</div>
+
 	</section>
 	{% endblock %}
 	<!-- Include all js compiled plugins (below), or include individual files as needed -->
