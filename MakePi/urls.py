@@ -1,3 +1,4 @@
+from MakePi import views
 """
 URL configuration for MakePi project.
 
@@ -19,7 +20,8 @@ from django.urls import path
 from MakePi import  views   
 
 
-urlpatterns = [path('', views.toindex, name='index')
+urlpatterns = [
+    path('api/toilettes/', views.toilettes_api, name='toilettes_api'),path('', views.toindex, name='index')
               , path('index/', views.index, name='index')
               , path('generic/', views.generic, name='generic')
               , path('question1/', views.question1, name='nbr_arr')

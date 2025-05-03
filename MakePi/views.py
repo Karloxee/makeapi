@@ -490,3 +490,31 @@ class Utilisateur():
     def __init__(self,nom,mail):
         self.nom=nom
         self.mail=mail
+
+from django.http import JsonResponse
+from MakePi.models import Toilette
+
+def toilettes_api(request):
+    pmr = request.GET.get('pmr')
+    bebe = request.GET.get('bebe')
+    arr = request.GET.get('arr')
+
+    toilettes = Toilette.objects.all()
+
+    if pmr == '1':
+        toilettes = toilettes.filter(acces_pmr=True)
+    if bebe == '1':
+        toilettes = toilettes.filter(relais_bebe=True)
+    if arr:
+        toilettes = toilettes.filter(arrondissement=f"750{arr.zfill(2)}")
+
+    data = [{
+        'type': t.type,
+        'adresse': t.adresse,
+        'pmr': t.acces_pmr,
+        'bebe': t.relais_bebe,
+        'lat': t.latitude,
+        'lng': t.longitude
+    } for t in toilettes]
+
+    return JsonResponse(data, safe=False)
