@@ -35,17 +35,24 @@
 <body>
 	{% block bodyContent %}
 	<section class="graphique">
+		<div class="container">
+			<div class="row g-4">
 		<h2 class="title-question">Accés PMR par arrondissements</h2>
-		<div class="container-graphique-q3">
-			<img src="../static/img/q3.png" alt="Image Graphique Question n°3" class="img-q3"/>
-			<div class="content-question-q3">
-				<h2 class="title-question-description">Description</h2>
+		<div class="row align-items-center container-graphique-q3">
+			<div class="col-6">
+				<img src="../static/img/q3.png" alt="Image du Graphique  Question n°3" class="img-q3 "/>
+			</div>
+			<div class="col-6 content-question-q3">
+				<h3 class="title-question-description">Description</h3>
 				<p class="text-question">
-					Sur ce graphique, on peut voir le pourcentage des toilettes qui sont accessibles aux personnes à mobilité réduite.
+					Sur ce graphique, on peut voir le pourcentage des toilettes qui sont accessibles aux personnes à mobilité réduite.<br>
 					Paris compte 615 toilettes réparties sur les 20 arrondissements et 82,4% (soit 507 toilettes) sont accessibles aux personnes à mobilité réduite.
 				</p>
 			</div>
 		</div>
+	</div>
+</div>
+
 	</section>
 	{% endblock %}
 	<!-- Include all js compiled plugins (below), or include individual files as needed -->
