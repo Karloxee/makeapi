@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: matthieu
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: makepi_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: django-app
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://matthieu:postgres@db:5432/makepi_db
+    ports:
+      - "8000:8000"
+
+volumes:
+  pg_data:
