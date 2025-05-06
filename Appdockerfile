@@ -1,0 +1,52 @@
+# Utilisation de l'image officielle Python
+FROM python:3.11-slim
+
+# Installation de PostgreSQL client (pour connexion)
+RUN apt update && apt install -y python3-pip libpq-dev postgresql-client && rm -rf /var/lib/apt/lists/*
+
+# Définition du répertoire de travail
+WORKDIR /app
+
+# Copie des fichiers du projet
+COPY . .
+
+# Création et activation de l'environnement virtuel
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+
+# Installation des dépendances
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Création de la base de données et des tables
+RUN service postgresql start &&\
+    sudo -u postgres psql <<EOF
+    CREATE DATABASE makepi_db OWNER matthieu;
+    GRANT ALL PRIVILEGES ON DATABASE makepi_db TO matthieu;
+    ALTER SCHEMA public OWNER TO matthieu;
+EOF
+
+RUN sudo -u postgres psql -d makepi_db <<EOF
+    CREATE TABLE IF NOT EXISTS public.users (
+        id serial PRIMARY KEY NOT NULL,
+        nom character varying(32) NOT NULL,
+        mail character varying(255) NOT NULL,
+        motdepasse character varying(255) NOT NULL,
+        actif smallint
+    );
+    
+    CREATE TABLE IF NOT EXISTS public.messages (
+        id serial PRIMARY KEY NOT NULL,
+        id_user integer NOT NULL,
+        objet character varying(255) NOT NULL,
+        messages text NOT NULL,
+        statut character varying(1) NOT NULL,
+        date_message timestamp NOT NULL,
+        FOREIGN KEY (id_user) REFERENCES users(id)
+    );
+EOF
+
+# Exposition du port Django
+EXPOSE 8000
+
+# Commande de démarrage du serveur Django
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
