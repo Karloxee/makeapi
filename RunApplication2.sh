@@ -28,6 +28,10 @@ echo "🐘 Configuration de PostgreSQL..."
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
 
+# 🔹 Définition du mot de passe pour l'utilisateur postgres
+echo "🔑 Définition du mot de passe pour l'utilisateur système postgres..."
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+
 # 🔹 Modification des méthodes d'authentification de PostgreSQL
 echo "🔒 Modification des méthodes d'authentification de peer à md5..."
 # Modifier toutes les méthodes d'authentification locales (peer -> md5)
