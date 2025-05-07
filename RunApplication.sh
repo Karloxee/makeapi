@@ -1,40 +1,32 @@
 #!/bin/bash
 #MARCHE UNIQUEMENT SI VOUS AVEZ UN DOSSIER makeapi a la racine de debian sinon adapter !
 echo "🚀 Installation de l'application et de la base de données PostgreSQL..."
-
 # 🔹 Mise à jour du système
 sudo apt update && sudo apt upgrade -y
-
 # 🔹 Installation des dépendances
 echo "📦 Installation de Python et des outils nécessaires..."
 sudo apt install -y python3.11-venv python3-pip libpq-dev postgresql postgresql-contrib
-
 # 🔹 Création de l'environnement virtuel à la racine
 echo "🛠️ Création de l'environnement Python..."
 python3 -m venv /venv
 source /venv/bin/activate
-
 # 🔹 Vérification du dossier makeapi
 if [ ! -d "/makeapi" ]; then
     echo "❌ Erreur : Le dossier /makeapi n'existe pas. Assurez-vous que votre projet est placé correctement."
     exit 1
 fi
 cd /makeapi
-
 # 🔹 Installation des dépendances Python depuis makeapi
 echo "⚙️ Installation des dépendances..."
 pip install --upgrade pip
 pip install -r /makeapi/requirements.txt  # 🔹 Mise à jour du chemin
-
 # 🔹 Lancement du serveur Django
 echo "🌍 Lancement du serveur Django..."
 python manage.py runserver 0.0.0.0:8000 &
-
 # 🔹 Configuration de PostgreSQL
 echo "🐘 Configuration de PostgreSQL..."
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
-
 # 🔹 Vérification et création du rôle matthieu
 echo "📊 Vérification et création de l'utilisateur matthieu..."
 sudo -u postgres psql <<EOF
@@ -45,6 +37,12 @@ BEGIN
     END IF;
 END
 \$\$;
+EOF
+
+# 🔹 Modification du mot de passe pour matthieu (ajout demandé)
+echo "🔐 Définition du mot de passe pour l'utilisateur matthieu..."
+sudo -u postgres psql <<EOF
+ALTER ROLE matthieu WITH PASSWORD 'postgres';
 EOF
 
 # 🔹 Création de la base de données
@@ -66,7 +64,6 @@ BEGIN
 END
 \$\$;
 EOF
-
 # 🔹 Création des tables dans makepi_db
 echo "📌 Création des tables..."
 sudo -u postgres psql -d makepi_db <<EOF
@@ -77,7 +74,6 @@ CREATE TABLE IF NOT EXISTS public.users (
     motdepasse character varying(255) NOT NULL,
     actif smallint
 );
-
 CREATE TABLE IF NOT EXISTS public.messages (
     id serial PRIMARY KEY NOT NULL,
     id_user integer NOT NULL,
@@ -88,5 +84,4 @@ CREATE TABLE IF NOT EXISTS public.messages (
     FOREIGN KEY (id_user) REFERENCES users(id)
 );
 EOF
-
 echo "✅ Installation terminée !"
