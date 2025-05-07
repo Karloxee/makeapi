@@ -2,8 +2,9 @@
 set -e  # Arrêt en cas d'erreur
 
 # 🔹 Variables
-K3S_URL="https://192.168.27.144:6443"
+K3S_URL="https://192.168.27.144:6443" #IP Machine Maître 
 K3S_TOKEN="K100efd1126ae5dc02fc9d6bd64a7f4928043d20430ba08e099ef524dfe79fcc665::server:76589f873c726efc4eb73fde7f76cbaa"
+# Faire sudo cat /var/lib/rancher/k3s/server/node-token sur ta machine maître pour avoir le token 
 
 echo "🚀 Installation du client K3s (agent)..."
 
