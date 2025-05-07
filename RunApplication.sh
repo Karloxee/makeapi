@@ -27,6 +27,14 @@ python manage.py runserver 0.0.0.0:8000 &
 echo "🐘 Configuration de PostgreSQL..."
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
+
+# 🔹 Modification de la méthode d'authentification de PostgreSQL
+echo "🔒 Modification de la méthode d'authentification de peer à md5..."
+sudo sed -i "s/local   all             all             peer/local   all             all             md5/" /etc/postgresql/15/main/pg_hba.conf
+
+# 🔹 Redémarrage de PostgreSQL pour appliquer les changements
+echo "🔄 Redémarrage du service PostgreSQL..."
+sudo systemctl restart postgresql
 # 🔹 Vérification et création du rôle matthieu
 echo "📊 Vérification et création de l'utilisateur matthieu..."
 sudo -u postgres psql <<EOF
