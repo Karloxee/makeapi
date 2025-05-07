@@ -2,7 +2,7 @@
 
 set -e  # Arrêter le script en cas d'erreur
 
-echo "🚀 Installation de Terraform..."
+echo "🚀 Installation de Terraform sans fichiers inutiles..."
 
 # Mise à jour du système
 sudo apt update && sudo apt upgrade -y
@@ -17,14 +17,14 @@ echo "📦 Dernière version détectée : Terraform $LATEST_VERSION"
 # Téléchargement de Terraform
 curl -LO "https://releases.hashicorp.com/terraform/${LATEST_VERSION}/terraform_${LATEST_VERSION}_linux_amd64.zip"
 
-# Extraction et déplacement du binaire
-unzip "terraform_${LATEST_VERSION}_linux_amd64.zip"
+# Extraction et déplacement du binaire uniquement
+unzip -o "terraform_${LATEST_VERSION}_linux_amd64.zip" terraform
 sudo mv terraform /usr/local/bin/
+
+# Nettoyage des fichiers temporaires pour éviter les fichiers inutiles
+rm -f "terraform_${LATEST_VERSION}_linux_amd64.zip"
 
 # Vérification de l'installation
 terraform version
 
-# Nettoyage des fichiers temporaires
-rm -f "terraform_${LATEST_VERSION}_linux_amd64.zip"
-
-echo "✅ Terraform installé avec succès !"
+echo "✅ Terraform installé avec succès, sans fichiers superflus !"
