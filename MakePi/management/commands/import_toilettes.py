@@ -25,10 +25,10 @@ class Command(BaseCommand):
                     lat, lon = None, None
 
                 toilette = Toilette(
-                    type=row.get("type", "") or "",
-                    adresse=row.get("adresse", "") or "",
+                    type=row.get("TYPE", "") or "",
+                    adresse=row.get("ADRESSE", "") or "",
                     arrondissement=(row.get("ARRONDISSEMENT", "") or "").zfill(2),
-                    horaires=row.get("horaires", "") or "",
+                    horaires=row.get("HORAIRE", "") or "",
                     acces_pmr=(row.get("ACCES_PMR", "").strip().lower() == "oui"),
                     relais_bebe=(row.get("RELAIS_BEBE", "").strip().lower() == "oui"),
                     latitude=lat,

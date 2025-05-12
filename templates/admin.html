@@ -92,17 +92,17 @@
                                         <td>Désactivé</td>
                                         {% endif %} 
                                         <td>
-                                            <a href={% url 'activation' id_user=lst.0 %}>
+                                            <a href={% url 'activer_user' id_user=lst.0 %}>
                                                 <img  src="../static/images/enable.png" style="width : 20px;"/>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href={% url 'desactivation' id_user=lst.0 %}>
+                                            <a href={% url 'desactiver_user' id_user=lst.0 %}>
                                                 <img src="../static/images/disable.png" style="width : 20px;"/>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href={% url 'suppression' id_user=lst.0 %}>
+                                            <a href={% url 'delete_user' id_user=lst.0 %}>
                                                 <img src="../static/images/delete.png" style="width : 20px;"/>
                                             </a>
                                         </td>

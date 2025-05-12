@@ -1,4 +1,5 @@
-{% extends 'generic.html' %}
+{% extends "generic.html" %}
+{% load static %}
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -40,7 +41,9 @@
 			<div class="row g-4">
 		<h2 class="title-question">Type des toilettes par arrondissements</h2>
 		<div class="col-12 row align-items-center container-graphique-q2">
-				<img src="../static/img/q2.png" alt="Image du Graphique  Question n°2" class="img-q2 "/>
+			<canvas id="chart2"></canvas>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+			<script src="{% static 'js/charts/q2.js' %}"></script>
 		</div>
 			<div class="col-6 content-question-q2">
 				<h3 class="title-question-description">Description</h3>

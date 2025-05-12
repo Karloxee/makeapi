@@ -107,25 +107,25 @@
           <div class="row gy-4 mt-5">
 
             <div class="col-xl-4 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><i class="bi bi-buildings"></i></div>
+              <div class="icon-box glow-card">
+                <div class="icon icon-purple"><i class="bi bi-buildings"></i></div>
                 <h4 class="title"><a href="../question1/" class="stretched-link">Toilettes par arrondissement</a></h4>
               </div>
-            </div><!--End Icon Box -->
-
+            </div>
+            
             <div class="col-xl-4 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><i class="bi bi-gem"></i></div>
+              <div class="icon-box glow-card">
+                <div class="icon icon-pink"><i class="bi bi-gem"></i></div>
                 <h4 class="title"><a href="../question2/" class="stretched-link">Type de toilettes par arrondissement</a></h4>
               </div>
-            </div><!--End Icon Box -->
-
+            </div>
+            
             <div class="col-xl-4 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><i class="bi bi-geo-alt"></i></div>
-                <h4 class="title"><a href="../question3/" class="stretched-link">Acces PMR</a></h4>
+              <div class="icon-box glow-card">
+                <div class="icon icon-indigo"><i class="bi bi-geo-alt"></i></div>
+                <h4 class="title"><a href="../question3/" class="stretched-link">Accès PMR</a></h4>
               </div>
-            </div><!--End Icon Box -->
+            </div>
 
           </div>
         </div>
@@ -324,7 +324,13 @@
   </div>
 </div>
 
+<div id="no-result-msg" class="alert alert-warning text-center mt-3 d-none">
+  Aucun résultat ne correspond à vos filtres.
+</div>
+
 <div id="map" style="height: 600px;"></div>
+
+
           </div>
         </div>
         <script>
@@ -480,27 +486,34 @@ function applyFilters() {
     .then(response => response.json())
     .then(data => {
       clearMarkers();
-      data.forEach(t => {
-        if (t.lat && t.lng) {
-          const marker = new google.maps.Marker({
-            position: { lat: t.lat, lng: t.lng },
-            map: map,
-            icon: "../static/img/poo.png"
-          });
 
-          const infoWindow = new google.maps.InfoWindow({
-            content: `
-              <div><strong>Adresse:</strong> ${t.adresse}</div>
-              <div><strong>Type:</strong> ${t.type}</div>
-              <div><strong>Accès PMR:</strong> ${t.pmr ? "Oui" : "Non"}</div>
-              <div><strong>Relais bébé:</strong> ${t.bebe ? "Oui" : "Non"}</div>
-            `
-          });
+      const messageBox = document.getElementById("no-result-msg");
+      if (data.length === 0) {
+        messageBox.classList.remove("d-none");
+      } else {
+        messageBox.classList.add("d-none");
+        data.forEach(t => {
+          if (t.lat && t.lng) {
+            const marker = new google.maps.Marker({
+              position: { lat: t.lat, lng: t.lng },
+              map: map,
+              icon: "../static/img/poo.png"
+            });
 
-          marker.addListener('click', () => infoWindow.open(map, marker));
-          markers.push(marker);
-        }
-      });
+            const infoWindow = new google.maps.InfoWindow({
+              content: `
+                <div><strong>Adresse:</strong> ${t.adresse}</div>
+                <div><strong>Type:</strong> ${t.type}</div>
+                <div><strong>Accès PMR:</strong> ${t.pmr ? "Oui" : "Non"}</div>
+                <div><strong>Relais bébé:</strong> ${t.bebe ? "Oui" : "Non"}</div>
+              `
+            });
+
+            marker.addListener('click', () => infoWindow.open(map, marker));
+            markers.push(marker);
+          }
+        });
+      }
     })
     .catch(error => console.error("Erreur API:", error));
 }

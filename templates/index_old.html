@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Make PiPoo</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../static/css/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/css/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../static/css/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../static/css/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../static/css/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../static/css/assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Impact
+  * Template URL: https://bootstrapmade.com/impact-bootstrap-business-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<!-- Select2 Bootstrap 5 Theme -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<style>
+  .form-check-input:checked {
+    background-color: #6f3381;
+    border-color: #6f3381;
+  }
+  .form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(111, 51, 129, 0.25);
+  }
+</style>
+
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header fixed-top">
+
+    <div class="branding d-flex align-items-cente">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="../index/" class="logo d-flex align-items-center">
+          <!-- Uncomment the line below if you also wish to use an image logo -->
+          <!-- <img src="assets/img/logo.png" alt=""> -->
+		  <img src="../static/images/logo/logo.png" alt="Photo logo" width="100" height="70" class="logo-header"/>
+          <span>.</span>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="#hero" class="active">Accueil<br></a></li>
+            <li><a href="#about">Qui sommes nous?</a></li>
+            <li><a href="#clients">notre client</a></li>
+            <li><a href="../inscription/">Inscription</a></li>
+            <li><a href="../contact/">Contact</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section accent-background">
+
+      <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 justify-content-between">
+          <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+            <h2><span>Sanisettes </span><span class="accent">Paris</span></h2>
+            <p>des sanitaires accessibles au public autour de votre position</p>
+            <div class="d-flex">
+              <a href="#maps" class="btn-get-started">La Carte </a>
+            </div>
+          </div>
+       </div>
+      </div>
+
+      <div class="icon-boxes position-relative" data-aos="fade-up" data-aos-delay="200">
+        <div class="container position-relative">
+          <div class="row gy-4 mt-5">
+
+            <div class="col-xl-4 col-md-6">
+              <div class="icon-box">
+                <div class="icon"><i class="bi bi-buildings"></i></div>
+                <h4 class="title"><a href="../question1/" class="stretched-link">Toilettes par arrondissement</a></h4>
+              </div>
+            </div><!--End Icon Box -->
+
+            <div class="col-xl-4 col-md-6">
+              <div class="icon-box">
+                <div class="icon"><i class="bi bi-gem"></i></div>
+                <h4 class="title"><a href="../question2/" class="stretched-link">Type de toilettes par arrondissement</a></h4>
+              </div>
+            </div><!--End Icon Box -->
+
+            <div class="col-xl-4 col-md-6">
+              <div class="icon-box">
+                <div class="icon"><i class="bi bi-geo-alt"></i></div>
+                <h4 class="title"><a href="../question3/" class="stretched-link">Acces PMR</a></h4>
+              </div>
+            </div><!--End Icon Box -->
+
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Qui sommes nous ?<br></h2>
+        <p>Make PiPoo Team</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
+            <div class="member">
+              <img src="../static/images/teams/avatar_kennedy.png" alt="Photo Joseph Yonkile" class="img-fluid">
+              <h4>Joseph Yonkile</h4>
+              <span>Big Data/Développeur Python</span>
+              <div class="social">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div><!-- End Team Member -->
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
+            <div class="member">
+              <img src="../static/images/teams/avatar_matthieu.webp" alt="Photo Matthieu Simon" class="img-fluid">
+              <h4>Matthieu Simon</h4>
+              <span>Git Master/Développeur Python</span>
+              <div class="social">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div><!-- End Team Member -->
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
+            <div class="member">
+              <img src="../static/images/teams/avatar_suyeon.webp" alt="Photo Suyeon Lee" class="img-fluid"/>
+              <h4>Suyeon Lee</h4>
+              <span>Scrum Master/Développeur Python</span>
+              <div class="social">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div><!-- End Team Member -->
+
+          <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="400">
+            <div class="member">
+              <img src="../static/images/teams/avatar_younes.png" alt="Photo Younes Omerani" class="img-fluid" />
+              <h4>Younes Omerani</h4>
+              <span>Chef de Projet/Développeur Python</span>
+              <div class="social">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div><!-- End Team Member -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /About Section -->
+
+    <!-- Clients Section -->
+    <section id="clients" class="clients section">
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Nos Clients</h2>
+        <p>Ils nous font confiance</p>
+      </div><!-- End Section Title -->
+
+
+      <div class="container">
+
+        <div class="swiper init-swiper">
+          <script type="application/json" class="swiper-config">
+            {
+              "loop": true,
+              "speed": 600,
+              "autoplay": {
+                "delay": 5000
+              },
+              "slidesPerView": "auto",
+              "pagination": {
+                "el": ".swiper-pagination",
+                "type": "bullets",
+                "clickable": true
+              },
+              "breakpoints": {
+                "320": {
+                  "slidesPerView": 2,
+                  "spaceBetween": 40
+                },
+                "480": {
+                  "slidesPerView": 3,
+                  "spaceBetween": 60
+                },
+                "640": {
+                  "slidesPerView": 4,
+                  "spaceBetween": 80
+                },
+                "992": {
+                  "slidesPerView": 6,
+                  "spaceBetween": 120
+                }
+              }
+            }
+          </script>
+          <div class="swiper-wrapper align-items-center">
+            <div class="swiper-slide"><img src="../static/images/logo/GRETA-78.png" class="img-fluid" alt=""><h3 class="title-client">Greta des Yvelines</h3></div>
+            <div class="swiper-slide">
+                <img src="../static/images/logo/Avatar-Gilles.jpeg" class="img-fluid" alt="">
+                <h3 class="title-client">Gilles Veronie</h3>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Clients Section -->
+
+     <!-- Map Section -->
+    <section id="maps" class="maps section">
+       <div class="container section-title" data-aos="fade-up">
+        <h2>Explore Paris</h2>
+        <p>Un carte des toilettes dans Paris</p>
+      </div><!-- End Section Title -->
+
+     <div class="container">
+        <div class="row g-4">
+
+          <div class="col-12">
+            
+<!-- Filtres interactifs version switchs -->
+<div class="container mb-4 mt-4">
+  <div class="row g-3 align-items-end">
+    <div class="col-3">
+      <label class="form-label fw-bold">Arrondissement</label>
+      <select id="filter-arr" class="form-select" data-placeholder="Choisir un arrondissement">
+<option></option>
+        <option value="">Tous</option>
+        <option value="01">01ᵉ</option>
+        <option value="02">02ᵉ</option>
+        <option value="03">03ᵉ</option>
+        <option value="04">04ᵉ</option>
+        <option value="05">05ᵉ</option>
+        <option value="06">06ᵉ</option>
+        <option value="07">07ᵉ</option>
+        <option value="08">08ᵉ</option>
+        <option value="09">09ᵉ</option>
+        <option value="10">10ᵉ</option>
+        <option value="11">11ᵉ</option>
+        <option value="12">12ᵉ</option>
+        <option value="13">13ᵉ</option>
+        <option value="14">14ᵉ</option>
+        <option value="15">15ᵉ</option>
+        <option value="16">16ᵉ</option>
+        <option value="17">17ᵉ</option>
+        <option value="18">18ᵉ</option>
+        <option value="19">19ᵉ</option>
+        <option value="20">20ᵉ</option>
+      </select>
+    </div>
+    <div class="col-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="filter-pmr">
+        <label class="form-check-label fw-bold" for="filter-pmr">Accès PMR</label>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="filter-bebe">
+        <label class="form-check-label fw-bold" for="filter-bebe">Relais Bébé</label>
+      </div>
+    </div>
+    <div class="col-3 d-grid">
+      <button class="btn" style="background-color: #6f3381; color: white;" onclick="applyFilters()">Filtrer</button>
+    </div>
+  </div>
+</div>
+
+<div id="map" style="height: 600px;"></div>
+          </div>
+        </div>
+        <script>
+          async function initMap() {
+            const { Map } = await google.maps.importLibrary("maps");
+            map = new Map(document.getElementById("map"), {
+              center: { lat: 48.8566, lng: 2.3522 },
+              zoom: 15,
+              minZoom: 11
+            });
+            applyFilters();
+          }
+          const csvUrl = '../static/csv/sanisettes_paris.csv';
+          function OLD_loadCSV_disabled() {
+            fetch(csvUrl)
+              .then(response => response.text())
+              .then(csv => {
+                const rows = csv.split('\n').map(row => row.split(';'));
+                const headers = rows.shift();
+                const geoPointIndex = 9;
+                const addressIndex = 2;
+                const typeIndex = 0;
+                const pmr_index = 5;
+                const relais_baby_index = 5;
+                const markers = [];
+                rows.forEach(row => {
+                  if (row.length > geoPointIndex && row[geoPointIndex]) {
+                    const geoPoint = row[geoPointIndex].split(',').map(parseFloat);
+                    if (!isNaN(geoPoint[1]) && !isNaN(geoPoint[0])) {
+                      const marker = new google.maps.Marker({
+                        position: { lat: geoPoint[0], lng: geoPoint[1] },
+                        map: map,
+                        icon: "../static/img/poo.png"
+                      });
+                      marker.address = addressIndex !== -1 ? row[addressIndex] : "";
+                      marker.type = typeIndex !== -1 ? row[typeIndex] : "";
+                      marker.pmr = pmr_index !== -1 ? row[pmr_index] : "";
+                      marker.bebe = relais_baby_index !== -1 ? row[relais_baby_index] : "";
+                      marker.addListener('click', function() {
+                        const infoWindow = new google.maps.InfoWindow({
+                          content: `<div><strong>Adresse:</strong> ${this.address}</div><div><strong>Type:</strong> ${this.type}</div>
+                          <div><strong>Accès PMR:</strong> ${this.pmr}</div>
+                          <div><strong>Relais bébé:</strong> ${this.bebe}</div>`
+                        });
+                        infoWindow.open(map, this);
+                      });
+                      markers.push(marker);
+                    }
+                  }
+                });
+              })
+              .catch(error => {
+                console.error('Error loading CSV:', error);
+              });
+          }
+          
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDKJ1optwgQVXlabjL-FfyBAig-yFdT2s&callback=initMap" async defer></script>
+      </div>
+    </section><!-- /map section -->
+
+ </main>
+
+  <footer id="footer" class="footer accent-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-md-12 footer-about">
+          <a href="/index" class="logo d-flex align-items-center">
+            <img src="../static/images/logo/logo.png" alt="Photo logo" width=150 height=100 class="logo-header"/>
+          </a>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename"> Make Pi Poo </strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        Designed by Make Pi Poo Team
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="../static/js/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/js/assets/vendor/php-email-form/validate.js"></script>
+  <script src="../static/js/assets/vendor/aos/aos.js"></script>
+  <script src="../static/js/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../static/js/assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../static/js/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../static/js/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../static/js/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../static/js/assets/js/main.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    $('#filter-arr').select2({
+      theme: 'bootstrap-5',
+      width: '100%',
+      placeholder: 'Choisir un arrondissement',
+      allowClear: true
+    });
+  });
+</script>
+
+
+<script>
+let map;
+let markers = [];
+
+async function initMap() {
+  const { Map } = await google.maps.importLibrary("maps");
+
+  map = new Map(document.getElementById("map"), {
+    center: { lat: 48.8566, lng: 2.3522 },
+    zoom: 15,
+    minZoom: 11
+  });
+
+  applyFilters();
+}
+
+function clearMarkers() {
+  markers.forEach(marker => marker.setMap(null));
+  markers = [];
+}
+
+function applyFilters() {
+  const pmr = document.getElementById("filter-pmr").checked ? 1 : 0;
+  const bebe = document.getElementById("filter-bebe").checked ? 1 : 0;
+  const arr = document.getElementById("filter-arr").value;
+
+  const url = `/api/toilettes/?pmr=${pmr}&bebe=${bebe}&arr=${arr}`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      clearMarkers();
+      data.forEach(t => {
+        if (t.lat && t.lng) {
+          const marker = new google.maps.Marker({
+            position: { lat: t.lat, lng: t.lng },
+            map: map,
+            icon: "../static/img/poo.png"
+          });
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: `
+              <div><strong>Adresse:</strong> ${t.adresse}</div>
+              <div><strong>Type:</strong> ${t.type}</div>
+              <div><strong>Accès PMR:</strong> ${t.pmr ? "Oui" : "Non"}</div>
+              <div><strong>Relais bébé:</strong> ${t.bebe ? "Oui" : "Non"}</div>
+            `
+          });
+
+          marker.addListener('click', () => infoWindow.open(map, marker));
+          markers.push(marker);
+        }
+      });
+    })
+    .catch(error => console.error("Erreur API:", error));
+}
+
+window.initMap = initMap;
+</script>
+
+</body>
+
+</html>
