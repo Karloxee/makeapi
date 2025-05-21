@@ -136,12 +136,15 @@ else
     echo "ℹ️ L'utilisateur matthieu existe déjà, pas besoin de le recréer."
 fi
 
-# 🔹 Vérification que le port 8000 est utilisé par le serveur Django et arrêt des processus correspondants
-echo "🔍 Vérification de l'utilisation du port 8000..."
+# 🔹 Importation des données de toilettes
+echo "🔹 Importation des données de toilettes..."
+python manage.py import_toilettes
+
+# 🔹 Vérification que le port 8000 est uniquement utilisé par Django
+echo "🔍 Vérification de l'utilisation du port 8000 par Django..."
 DJANGO_PID=$(pgrep -f "manage.py runserver")
 if [ -n "$DJANGO_PID" ]; then
-    echo "❌ Un processus Django est déjà en cours d'exécution sur le port 8000. Arrêt du ou des processus..."
-    # Arrête uniquement les processus correspondant à Django, en préservant le reste
+    echo "❌ Un processus Django est déjà en cours d'exécution sur le port 8000. Arrêt du processus..."
     kill -9 $DJANGO_PID
 fi
 
