@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+
+    environment {
+        VENV_DIR = 'venv'
+        SONARQUBE_URL = 'http://localhost:9000'
+        DOCKER_IMAGE = 'dockerhub_username/makepi:latest' // Remplace avec ton repo Docker Hub
+        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig-cred'
+    }
+
+    tools {
+        sonarQube 'SonarQube' // Nom défini dans Jenkins > Global Tool Configuration
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '📥 Clonage du dépôt Git'
+                git 'https://github.com/ton-org/makepi.git' // Remplace par ton URL réelle
+            }
+        }
+
+        stage('Préparation Environnement Python') {
+            steps {
+                echo '🔧 Création de l\'environnement virtuel et installation des dépendances'
+                sh '''
+                    python3 -m venv ${VENV_DIR}
+                    . ${VENV_DIR}/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Lint & Format Check') {
+            steps {
+                echo '🔍 Analyse du code avec flake8 et black'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    flake8 --exclude=${VENV_DIR}
+                    black --check . || true
+                '''
+            }
+        }
+
+        stage('Tests Unitaires') {
+            steps {
+                echo '🧪 Lancement des tests Django'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    python manage.py check
+                    python manage.py test
+                '''
+            }
+        }
+
+        stage('Analyse SonarQube') {
+            steps {
+                echo '🔍 Analyse statique avec SonarQube'
+                withSonarQubeEnv('SonarQube') {
+                    sh 'sonar-scanner -Dsonar.projectKey=makepi -Dsonar.sources=.'
+                }
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                echo '🐳 Construction et push de l\'image Docker'
+                script {
+                    docker.build('makepi')
+                          .push("${DOCKER_IMAGE}")
+                }
+            }
+        }
+
+        stage('Déploiement sur K3s') {
+            steps {
+                echo '🚀 Déploiement sur le cluster K3s'
+                withCredentials([file(credentialsId: "${KUBECONFIG_CREDENTIALS_ID}", variable: 'KUBECONFIG')]) {
+                    sh 'kubectl apply -f k8s/deployment.yaml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '🧼 Nettoyage du workspace'
+            cleanWs()
+        }
+        failure {
+            echo '❌ Pipeline échoué. Consultez les logs pour plus de détails.'
+        }
+    }
+}
