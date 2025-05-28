@@ -4,7 +4,7 @@ pipeline {
     environment {
         VENV_DIR = 'venv'
         SONARQUBE_URL = 'http://localhost:9000'
-        DOCKER_IMAGE = 'dockerhub_username/makepi:latest' // Remplace avec ton repo Docker Hub
+        DOCKER_IMAGE = 'arcaneur/makeapi:latest'
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig-cred'
     }
 
