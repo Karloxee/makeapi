@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: 'https://github.com/ton-repo.git', branch: 'Jenkins'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+                sh 'pip install flake8 black isort'
+            }
+        }
+
+        stage('Lint and Format Check') {
+            steps {
+                // fail the pipeline if black, isort or flake8 fails
+                sh 'black --check .'
+                sh 'isort --check-only .'
+                sh 'flake8'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'pytest' // ou le framework que tu utilises
+            }
+        }
+
+        // autres étapes : build Docker, push image, deploy, etc.
+    }
+}
+
