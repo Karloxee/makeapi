@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    environment {
+        VENV_DIR = 'venv'
+    }
+
+    stages {
+        stage('Préparation') {
+            steps {
+                echo '🔧 Création de l\'environnement virtuel et installation des dépendances'
+                sh '''
+                    python3 -m venv ${VENV_DIR}
+                    . ${VENV_DIR}/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                    pip install flake8 black isort
+                '''
+            }
+        }
+
+        stage('Vérification qualité du code') {
+            steps {
+                echo '🔎 Lint du code avec flake8, black et isort'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    echo "➡️ flake8"
+                    flake8 --exclude=${VENV_DIR}
+
+                    echo "➡️ black --check"
+                    black --check . || true  # N'échoue pas le pipeline si reformattage nécessaire
+
+                    echo "➡️ isort --check-only"
+                    isort . --check-only || true  # N'échoue pas le pipeline si tri nécessaire
+                '''
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                echo '🧪 Lancement des tests Django'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    python manage.py check
+                    python manage.py test
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '🧼 Nettoyage du workspace'
+            cleanWs()
+        }
+
+        failure {
+            echo '❌ Pipeline échoué. Consultez les logs pour plus de détails.'
+        }
+    }
+}
