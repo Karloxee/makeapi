@@ -20,7 +20,6 @@ pipeline {
 
         stage('Install Dependencies2 flake8, isort, black') {
             steps {
-                sh 'pip install -r requirements.txt'
                 sh 'pip install flake8 black isort'
             }
         }
