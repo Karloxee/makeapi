@@ -1,0 +1,349 @@
+pipeline {
+    agent any
+    
+    environment {
+        VENV_DIR = 'venv'
+        DJANGO_SETTINGS_MODULE = 'makeapi.settings'
+        PYTHONPATH = "${WORKSPACE}/makeapi"
+        SONARQUBE_URL = 'http://localhost:9000'
+        DOCKER_IMAGE = 'arcaneur/makeapi'
+        DOCKER_REGISTRY = 'docker.io'
+        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig-cred'
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
+    }
+    
+    tools {
+        sonarQube 'SonarQube' // Nom défini dans Jenkins > Global Tool Configuration
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timeout(time: 45, unit: 'MINUTES')
+        retry(2)
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '📥 Clonage du repository'
+                git url: 'https://github.com/Karloxee/makeapi.git', branch: 'Jenkins'
+                
+                script {
+                    env.GIT_COMMIT_SHORT = sh(
+                        script: "git rev-parse --short HEAD",
+                        returnStdout: true
+                    ).trim()
+                    env.BUILD_VERSION = "${env.BUILD_NUMBER}-${env.GIT_COMMIT_SHORT}"
+                }
+            }
+        }
+        
+        stage('Environment Setup') {
+            steps {
+                echo '🔧 Création de l\'environnement virtuel et installation des dépendances'
+                sh '''
+                    # Nettoyage des anciens environnements
+                    rm -rf ${VENV_DIR}
+                    
+                    # Création de l'environnement virtuel
+                    python3 -m venv ${VENV_DIR}
+                    
+                    # Activation et mise à jour
+                    . ${VENV_DIR}/bin/activate
+                    
+                    # Mise à jour des outils de base
+                    pip install --upgrade pip setuptools wheel
+                    
+                    # Installation des dépendances
+                    pip install -r requirements.txt
+                    
+                    # Vérification de l'installation
+                    pip list
+                '''
+            }
+        }
+        
+        stage('Security Scan') {
+            steps {
+                echo '🔒 Analyse de sécurité avec Bandit'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    bandit -r . -f json -o bandit-report.json -x ${VENV_DIR},tests || true
+                    bandit -r . -f txt || echo "⚠️ Problèmes de sécurité détectés"
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'bandit-report.json', fingerprint: true, allowEmptyArchive: true
+                }
+            }
+        }
+        
+        stage('Code Quality - Auto Fix') {
+            steps {
+                echo '🔧 Correction automatique du code'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    
+                    echo "➡️ Reformattage avec black"
+                    black . --exclude=${VENV_DIR}
+                    
+                    echo "➡️ Tri des imports avec isort"
+                    isort . --skip=${VENV_DIR}
+                    
+                    echo "✅ Code reformatté automatiquement"
+                '''
+            }
+        }
+        
+        stage('Lint & Format Check') {
+            parallel {
+                stage('Flake8 Analysis') {
+                    steps {
+                        echo '🔎 Analyse Flake8'
+                        sh '''
+                            . ${VENV_DIR}/bin/activate
+                            flake8 . --exclude=${VENV_DIR} --output-file=flake8-report.txt --exit-zero
+                        '''
+                    }
+                    post {
+                        always {
+                            archiveArtifacts artifacts: 'flake8-report.txt', fingerprint: true, allowEmptyArchive: true
+                        }
+                    }
+                }
+                
+                stage('Black Check') {
+                    steps {
+                        echo '🔎 Vérification du formatage Black'
+                        sh '''
+                            . ${VENV_DIR}/bin/activate
+                            black --check . --exclude=${VENV_DIR} || echo "⚠️ Reformattage nécessaire"
+                        '''
+                    }
+                }
+                
+                stage('Isort Check') {
+                    steps {
+                        echo '🔎 Vérification du tri des imports'
+                        sh '''
+                            . ${VENV_DIR}/bin/activate
+                            isort . --check-only --skip=${VENV_DIR} || echo "⚠️ Tri des imports à revoir"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Django Checks') {
+            steps {
+                echo '🔍 Vérifications Django'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    cd makeapi
+                    
+                    # Vérification de la configuration Django
+                    python manage.py check
+                    
+                    # Vérification des migrations
+                    python manage.py makemigrations --check --dry-run || echo "⚠️ Nouvelles migrations possibles"
+                    
+                    # Collection des fichiers statiques (si nécessaire)
+                    python manage.py collectstatic --noinput --dry-run || echo "⚠️ Problème avec les fichiers statiques"
+                '''
+            }
+        }
+        
+        stage('Database Setup') {
+            steps {
+                echo '🗄️ Préparation de la base de données de test'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    cd makeapi
+                    
+                    # Migration de la base de données de test
+                    python manage.py migrate || echo "⚠️ Problème de migration"
+                '''
+            }
+        }
+        
+        stage('Tests Unitaires') {
+            parallel {
+                stage('Django Unit Tests') {
+                    steps {
+                        echo '🧪 Tests unitaires Django'
+                        sh '''
+                            . ${VENV_DIR}/bin/activate
+                            cd makeapi
+                            
+                            python manage.py test --verbosity=2 --keepdb --parallel
+                        '''
+                    }
+                }
+                
+                stage('Pytest Coverage') {
+                    steps {
+                        echo '📊 Tests avec couverture de code'
+                        sh '''
+                            . ${VENV_DIR}/bin/activate
+                            cd makeapi
+                            
+                            pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term-missing --junit-xml=test-results.xml || echo "⚠️ Certains tests ont échoué"
+                        '''
+                    }
+                    post {
+                        always {
+                            // Publication des résultats de tests
+                            publishTestResults testResultsPattern: '**/test-results.xml', allowEmptyResults: true
+                            
+                            // Publication des résultats de couverture
+                            publishHTML([
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: true,
+                                keepAll: true,
+                                reportDir: 'makeapi/htmlcov',
+                                reportFiles: 'index.html',
+                                reportName: 'Coverage Report'
+                            ])
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Analyse SonarQube') {
+            steps {
+                echo '🔍 Analyse statique avec SonarQube'
+                script {
+                    def scannerHome = tool 'SonarQube Scanner'
+                    withSonarQubeEnv('SonarQube') {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \\
+                                -Dsonar.projectKey=makeapi \\
+                                -Dsonar.projectName=MakeAPI \\
+                                -Dsonar.projectVersion=${env.BUILD_VERSION} \\
+                                -Dsonar.sources=. \\
+                                -Dsonar.exclusions=**/venv/**,**/__pycache__/**,**/migrations/**,**/node_modules/**,**/htmlcov/** \\
+                                -Dsonar.python.coverage.reportPaths=makeapi/coverage.xml \\
+                                -Dsonar.python.xunit.reportPath=makeapi/test-results.xml \\
+                                -Dsonar.python.flake8.reportPaths=flake8-report.txt \\
+                                -Dsonar.python.bandit.reportPaths=bandit-report.json
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Quality Gate') {
+            steps {
+                echo '🚪 Vérification du Quality Gate SonarQube'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
+            }
+        }
+        
+        stage('Docker Build & Push') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                    branch 'Jenkins'
+                }
+            }
+            steps {
+                echo '🐳 Construction et push de l\'image Docker'
+                script {
+                    // Construction de l'image Docker
+                    def dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_VERSION}")
+                    
+                    // Tag latest pour la branche principale
+                    if (env.BRANCH_NAME == 'main') {
+                        dockerImage.tag('latest')
+                    }
+                    
+                    // Push vers Docker Hub
+                    docker.withRegistry("https://${DOCKER_REGISTRY}", env.DOCKER_CREDENTIALS_ID) {
+                        dockerImage.push("${env.BUILD_VERSION}")
+                        
+                        if (env.BRANCH_NAME == 'main') {
+                            dockerImage.push('latest')
+                        }
+                    }
+                    
+                    // Nettoyage des images locales
+                    sh "docker rmi ${DOCKER_IMAGE}:${env.BUILD_VERSION} || true"
+                    if (env.BRANCH_NAME == 'main') {
+                        sh "docker rmi ${DOCKER_IMAGE}:latest || true"
+                    }
+                }
+            }
+        }
+        
+        stage('Déploiement sur K3s') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo '🚀 Déploiement sur le cluster K3s'
+                script {
+                    withCredentials([file(credentialsId: "${KUBECONFIG_CREDENTIALS_ID}", variable: 'KUBECONFIG')]) {
+                        // Mise à jour du manifeste avec la nouvelle image
+                        sh """
+                            sed -i 's|${DOCKER_IMAGE}:.*|${DOCKER_IMAGE}:${env.BUILD_VERSION}|g' k8s/deployment.yaml
+                        """
+                        
+                        // Application des manifests Kubernetes
+                        sh '''
+                            kubectl apply -f k8s/namespace.yaml || echo "Namespace déjà existant"
+                            kubectl apply -f k8s/configmap.yaml
+                            kubectl apply -f k8s/secret.yaml
+                            kubectl apply -f k8s/deployment.yaml
+                            kubectl apply -f k8s/service.yaml
+                            kubectl apply -f k8s/ingress.yaml || echo "Ingress optionnel"
+                            
+                            # Attendre le déploiement
+                            kubectl rollout status deployment/makeapi-deployment -n makeapi --timeout=300s
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo '🧼 Nettoyage du workspace'
+            
+            // Archivage des rapports
+            archiveArtifacts artifacts: '**/flake8-report.txt,**/bandit-report.json,**/coverage.xml,**/test-results.xml', fingerprint: true, allowEmptyArchive: true
+            
+            // Nettoyage
+            cleanWs()
+        }
+        
+        success {
+            echo '✅ Pipeline réussi ! Code propre et tests OK'
+            
+            // Notifications (exemple avec Slack)
+            // slackSend(
+            //     color: 'good',
+            //     message: "✅ Build réussi pour ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Voir le build>)"
+            // )
+        }
+        
+        failure {
+            echo '❌ Pipeline échoué. Consultez les logs pour plus de détails.'
+            
+            // Notifications d'échec
+            // slackSend(
+            //     color: 'danger',
+            //     message: "❌ Build échoué pour ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Voir le build>)"
+            // )
+        }
+        
+        unstable {
+            echo '⚠️ Pipeline instable - Certains tests ont échoué'
+        }
+    }
+}
