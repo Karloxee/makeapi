@@ -4,13 +4,14 @@ pipeline {
         VENV_DIR = 'venv'
     }
     stages {
-        stage('Clone Repository') {  // Gardé de p1 - plus explicite
+        stage('Clone Repository') {
             steps {
                 git url: 'https://github.com/Karloxee/makeapi.git', branch: 'Jenkins'
             }
         }
-        stage('Préparation') {  // De p2
+        stage('Préparation') {
             steps {
+                echo '🔧 Création de l\'environnement virtuel et installation des dépendances'
                 sh '''
                     python3 -m venv ${VENV_DIR}
                     . ${VENV_DIR}/bin/activate
@@ -20,29 +21,55 @@ pipeline {
                 '''
             }
         }
-        stage('Qualité du code') {
+        stage('Auto-correction du code') {
             steps {
+                echo '🔧 Correction automatique avec black et isort'
                 sh '''
                     . ${VENV_DIR}/bin/activate
-                    echo "🔍 Vérification de la qualité du code"
-                    flake8 --exclude=${VENV_DIR} || echo "⚠️ Problèmes de style détectés"
-                    black --check . || echo "⚠️ Reformattage nécessaire"
-                    isort . --check-only || echo "⚠️ Tri des imports nécessaire"
+                    echo "➡️ Reformattage avec black"
+                    black .
+                    echo "➡️ Tri des imports avec isort"
+                    isort .
+                    echo "✅ Code reformatté automatiquement"
                 '''
             }
         }
-        stage('Tests Django') {  // De p2 - plus approprié
+        stage('Vérification qualité du code') {
             steps {
+                echo '🔎 Vérification finale de la qualité du code'
                 sh '''
                     . ${VENV_DIR}/bin/activate
+                    echo "➡️ flake8"
+                    flake8 --exclude=${VENV_DIR} || echo "⚠️ Quelques problèmes subsistent"
+                    echo "➡️ black --check"
+                    black --check . || echo "⚠️ Reformattage supplémentaire nécessaire"
+                    echo "➡️ isort --check-only"
+                    isort . --check-only || echo "⚠️ Tri des imports à revoir"
+                '''
+            }
+        }
+        stage('Tests Django') {
+            steps {
+                echo '🧪 Lancement des tests Django'
+                sh '''
+                    . ${VENV_DIR}/bin/activate
+                    cd makeapi  # ⬅️ IMPORTANT: Se déplacer dans le bon dossier
                     python manage.py check
                     python manage.py test
                 '''
             }
         }
     }
-    post {  // Essentiel de p2
-        always { cleanWs() }
-        failure { echo '❌ Pipeline échoué' }
+    post {
+        always {
+            echo '🧼 Nettoyage du workspace'
+            cleanWs()
+        }
+        success {
+            echo '✅ Pipeline réussi ! Code propre et tests OK'
+        }
+        failure {
+            echo '❌ Pipeline échoué. Consultez les logs pour plus de détails.'
+        }
     }
 }
