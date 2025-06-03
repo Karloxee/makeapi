@@ -20,7 +20,10 @@ pipeline {
 
         stage('Install Dependencies2 flake8, isort, black') {
             steps {
-                sh 'pip install flake8 black isort'
+                sh '''
+                    . venv/bin/activate
+                    pip install flake8 black isort
+                '''
             }
         }
 
