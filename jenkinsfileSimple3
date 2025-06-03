@@ -29,10 +29,12 @@ pipeline {
 
         stage('Lint and Format Check') {
             steps {
-                // fail the pipeline if black, isort or flake8 fails
-                sh 'black --check .'
-                sh 'isort --check-only .'
-                sh 'flake8'
+                sh '''
+                    . venv/bin/activate
+                    black --check .
+                    isort . --check-only
+                    flake8 .
+                '''
             }
         }
 
