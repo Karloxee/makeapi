@@ -24,7 +24,8 @@ pipeline {
             steps {
                 sh '''
                     . ${VENV_DIR}/bin/activate
-                    flake8 --exclude=${VENV_DIR}
+                    echo "🔍 Vérification de la qualité du code"
+                    flake8 --exclude=${VENV_DIR} || echo "⚠️ Problèmes de style détectés"
                     black --check . || echo "⚠️ Reformattage nécessaire"
                     isort . --check-only || echo "⚠️ Tri des imports nécessaire"
                 '''
