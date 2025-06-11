@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    tools {
+        sonarScanner 'SonarQubeScanner' // ✅ Nom défini dans Jenkins > Global Tool Configuration
+    }
+
+    environment {
+        // Utilise une credential Jenkins si tu passes un token, sinon laisse vide
+        SONAR_TOKEN = credentials('sonarqube-token')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Karloxee/makeapi.git'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') { // ✅ Nom défini dans "Configure System"
+                    sh '''
+                        sonar-scanner \
+                          -Dsonar.projectKey=makeapi \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=http://<URL_DE_TON_SONARQUBE> \
+                          -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+            }
+        }
+    }
+}
