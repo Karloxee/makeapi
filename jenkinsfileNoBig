@@ -1,13 +1,8 @@
 pipeline {
     agent any
 
-    tools {
-        sonarScanner 'SonarQubeScanner' // ✅ Nom défini dans Jenkins > Global Tool Configuration
-    }
-
     environment {
-        // Utilise une credential Jenkins si tu passes un token, sinon laisse vide
-        SONAR_TOKEN = credentials('sonarqube-token')
+        SONAR_TOKEN = credentials('sonarqube-token') // si tu utilises un token
     }
 
     stages {
@@ -19,7 +14,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') { // ✅ Nom défini dans "Configure System"
+                withSonarQubeEnv('SonarQube') { // nom exact de ton instance SonarQube dans Jenkins
                     sh '''
                         sonar-scanner \
                           -Dsonar.projectKey=makeapi \
