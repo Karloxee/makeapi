@@ -15,13 +15,15 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        sonar-scanner \
+                    // Charger automatiquement l'outil installé
+                    def scannerHome = tool 'SonarScanner'
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
                           -Dsonar.projectKey=makeapi \
                           -Dsonar.sources=. \
                           -Dsonar.host.url=$SONAR_HOST_URL \
                           -Dsonar.login=$SONAR_TOKEN
-                    '''
+                    """
                 }
             }
         }
