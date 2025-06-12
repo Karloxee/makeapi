@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_TOKEN = credentials('sonarqube-token') // si tu utilises un token
+        SONAR_TOKEN = credentials('sonarqube-token') // Assure-toi que le token est bien dans Credentials
     }
 
     stages {
@@ -14,12 +14,12 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') { // nom exact de ton instance SonarQube dans Jenkins
+                withSonarQubeEnv('SonarQube') {
                     sh '''
                         sonar-scanner \
                           -Dsonar.projectKey=makeapi \
                           -Dsonar.sources=. \
-                          -Dsonar.host.url=http://<URL_DE_TON_SONARQUBE> \
+                          -Dsonar.host.url=$SONAR_HOST_URL \
                           -Dsonar.login=$SONAR_TOKEN
                     '''
                 }
