@@ -12,10 +12,6 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
     }
 
-    tools {
-        sonarQube 'SonarQube'
-    }
-
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         timeout(time: 45, unit: 'MINUTES')
