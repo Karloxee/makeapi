@@ -10,7 +10,7 @@ echo "Installation des dépendances (curl, gpg, Java)..."
 sudo apt install -y curl gnupg2 openjdk-17-jdk
 
 # Vérification de Java
-java -version || { echo "❌ Java 17 n'a pas été installé correctement !"; exit 1; }
+java -version || { echo "Java 17 n'a pas été installé correctement !"; exit 1; }
 
 # Nettoyage d'anciennes sources ou clés Jenkins (au cas où)
 echo "Nettoyage des anciennes sources Jenkins..."
@@ -31,7 +31,7 @@ echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkin
 echo "Mise à jour des paquets..."
 sudo apt update
 echo "Installation de Jenkins..."
-sudo apt install -y jenkins || { echo "❌ Échec de l'installation de Jenkins ! Vérifiez les sources."; exit 1; }
+sudo apt install -y jenkins || { echo "Échec de l'installation de Jenkins ! Vérifiez les sources."; exit 1; }
 
 # Démarrage et activation de Jenkins
 echo "Démarrage de Jenkins..."
