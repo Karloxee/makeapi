@@ -11,7 +11,7 @@ echo "Installation de Python, PostgreSQL et des outils nécessaires..."
 sudo apt install -y python3.11-venv python3-pip libpq-dev postgresql postgresql-contrib
 
 # Création de l'environnement virtuel
-echo "🛠Création de l'environnement Python..."
+echo "Création de l'environnement Python..."
 python3 -m venv /venv
 source /venv/bin/activate
 
