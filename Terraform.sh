@@ -27,4 +27,4 @@ rm -f "terraform_${LATEST_VERSION}_linux_amd64.zip"
 # Vérification de l'installation
 terraform version
 
-echo "✅ Terraform installé avec succès, sans fichiers superflus !"
+echo "Terraform installé avec succès, sans fichiers superflus !"
