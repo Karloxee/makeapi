@@ -36,7 +36,7 @@ sudo chown -R prometheus:prometheus /etc/prometheus
 
 # Vérification et correction si prometheus.yml manque
 if [ ! -f /etc/prometheus/prometheus.yml ]; then
-    echo "⚠ Le fichier prometheus.yml est manquant, téléchargement du fichier par défaut..."
+    echo "Le fichier prometheus.yml est manquant, téléchargement du fichier par défaut..."
     sudo wget -O /etc/prometheus/prometheus.yml https://raw.githubusercontent.com/prometheus/prometheus/main/documentation/examples/prometheus.yml
     sudo chown prometheus:prometheus /etc/prometheus/prometheus.yml
     sudo chmod 644 /etc/prometheus/prometheus.yml
